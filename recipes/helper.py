@@ -4,10 +4,9 @@ from .models import RecipeIngredient
 
 def update_recipe_ingredients(recipe, ingredients_json):
     # Remove old ingredients
-    # RecipeIngredient.objects.filter(recipe=recipe).delete()
+    RecipeIngredient.objects.filter(recipe=recipe).delete()
 
     # Add new ingredients
-    # ingredients = json.loads(ingredients_json)
     if not ingredients_json:
         # No ingredients sent; treat as empty list
         ingredients = []
