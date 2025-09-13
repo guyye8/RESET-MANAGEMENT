@@ -1,2 +1,5 @@
+# Django web framework
 django==4.2.22
+
+# Pillow for image processing with Django's ImageField
 Pillow==10.3.0
