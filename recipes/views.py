@@ -11,6 +11,7 @@ from django.shortcuts import render
 from django.utils import translation
 from django.urls import reverse
 from django.conf import settings
+from django.db import models  # This is the new/corrected import
 
 from .forms import RecipeForm
 from .models import User, Recipe, RecipeIngredient
@@ -34,11 +35,6 @@ def index(request):
         "recipes": data_transfer_objects
     })
 
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from django.db.models import Q
-from .models import Recipe
-
 @login_required
 def recipe_list(request):
     """Renders the recipe list with optional search by recipe name or ingredient."""
@@ -48,24 +44,14 @@ def recipe_list(request):
     if query:
         # Use the related_name 'ingredients' to search ingredient names
         recipes = recipes.filter(
-            Q(name__icontains=query) | 
-            Q(ingredients__ingredient__icontains=query)
+            models.Q(name__icontains=query) | 
+            models.Q(ingredients__ingredient__icontains=query)
         ).distinct()
 
     return render(request, 'recipes/recipelist.html', {
         'recipes': recipes.order_by("name"),
         'textfilter': query
     })
-
-
-# @login_required
-# def recipe_list(request):
-#     """Renders the recipe list. Optionally filtered by a contains-textfilter."""
-    
-#     return render(request, 'recipes/recipelist.html', {
-#         'recipes': Recipe.objects.all().order_by("name"),
-#         'textfilter': json.dumps(request.GET.get('q'))
-#     })
 
 
 @login_required
@@ -96,8 +82,8 @@ def edit_recipe(request, recipe_id):
     if request.method == 'POST':
         form = RecipeForm(request.POST, request.FILES, instance=recipe)
         if form.is_valid():
-            update_recipe_ingredients(recipe, request.POST.get('ingredients'))
-            form.save()
+            form.save() # The form must be saved first to create or update the recipe instance
+            update_recipe_ingredients(recipe, request.POST.get('ingredients')) # Now, update ingredients using the saved instance
 
             return HttpResponseRedirect(reverse('recipe_list'))
 
