@@ -4,24 +4,24 @@
 {% block title %}Login{% endblock %}
 
 {% block body %}
+    <div class="form-container">
+        <h2>{% translate 'Login' %}</h2>
 
-    <h2>{% translate 'Login' %}</h2>
+        {% if message %}
+            <div>{{ message }}</div>
+        {% endif %}
 
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group mb-2">
+                <input autofocus class="form-control" type="text" name="username" placeholder="{% translate 'Username' %}">
+            </div>
+            <div class="form-group mb-2">
+                <input class="form-control" type="password" name="password" placeholder="{% translate 'Password' %}">
+            </div>
+            <input class="btn btn-primary mb-2" type="submit" value="{% translate 'Login' %}">
+        </form>
 
-    <form action="{% url 'login' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group mb-2">
-            <input autofocus class="form-control" type="text" name="username" placeholder="{% translate 'Username' %}">
-        </div>
-        <div class="form-group mb-2">
-            <input class="form-control" type="password" name="password" placeholder="{% translate 'Password' %}">
-        </div>
-        <input class="btn btn-primary mb-2" type="submit" value="{% translate 'Login' %}">
-    </form>
-
-    {% translate 'ExistingAccountQuestion' %} <a href="{% url 'register' %}">{% translate 'RegisterHere' %}</a>
-
+        {% translate 'ExistingAccountQuestion' %} <a href="{% url 'register' %}">{% translate 'RegisterHere' %}</a>
+    </div>
 {% endblock %}
