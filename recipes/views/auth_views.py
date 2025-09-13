@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.db import IntegrityError
 from django.urls import reverse
 from django.conf import settings
-
+from recipes.models import User
 
 def login_view(request):
     """Login page"""
